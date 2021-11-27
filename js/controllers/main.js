@@ -1,26 +1,26 @@
 import TaskService from "../services/TaskService.js";
-import Task from "../models/Task.js"
-import Validation from "./Validation.js";
+import Task from "../models/Task.js";
 
 const getEle = (id) => document.getElementById(id);
 const taskService = new TaskService();
 let isLoading = false;
-const valid = new Validation();
 
 // loader
-const checkLoading=()=>{
-    if(isLoading){
+const checkLoading = () => {
+    if (isLoading) {
         getEle("loading").style.display = "block";
-    } else{
+    } else {
         getEle("loading").style.display = "none";
     }
 }
 
 // kiểm tra rỗng
-const validation = (task)=>{
- let isvalid = true;
- isvalid = valid.checkEmpty(task, "Task empty!");
- return isvalid;
+const validation = (task) => {
+    if (task.trim() != "") {
+        return true;
+    }
+    alert("Task empty!");
+    return false;
 }
 
 // lấy danh sách cv
@@ -91,26 +91,26 @@ const renderTask = (data) => {
 const addTask = () => {
     const textTask = getEle("newTask").value;
     let status = "todo";
-    const task = new Task(textTask,status);
-    if(validation(textTask)){
+    const task = new Task(textTask, status);
+    if (validation(textTask)) {
         isLoading = true;
         checkLoading();
         taskService
-        .addTaskAPI(task)
-        .then((result) => {
-            isLoading = false;
-            checkLoading();
-            alert("Add success!");
-            getListTask();
-            
-        })
-        .catch((error) => {
-            console.log(error);
-            isLoading = false;
-            checkLoading();
-        })
+            .addTaskAPI(task)
+            .then((result) => {
+                isLoading = false;
+                checkLoading();
+                alert("Add success!");
+                getListTask();
+
+            })
+            .catch((error) => {
+                console.log(error);
+                isLoading = false;
+                checkLoading();
+            })
     }
-    
+
 }
 getEle("addItem").onclick = addTask;
 
@@ -136,48 +136,48 @@ window.deleteTask = deleteTask;
 
 
 // update cv
-const updateTask =(task)=>{
+const updateTask = (task) => {
     isLoading = true;
     checkLoading();
     taskService
         .updateTaskAPI(task)
-        .then((result)=>{
+        .then((result) => {
             isLoading = false;
             checkLoading();
             alert("Change status success!");
             getListTask();
         })
-        .catch((error)=>{
+        .catch((error) => {
             isLoading = false;
             checkLoading();
             console.log(error);
         })
 };
 // update cv đang làm
-const updateTaskTodo=(id)=>{
+const updateTaskTodo = (id) => {
     taskService
-    .getTaskByID(id)
-    .then((result)=>{
-        result.data.status = "completed";
-        updateTask(result.data);
-    })
-    .catch((error)=>{
-        console.log(error);
-    })
+        .getTaskByID(id)
+        .then((result) => {
+            result.data.status = "completed";
+            updateTask(result.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
 }
 window.updateTaskTodo = updateTaskTodo;
 
 // update cv đã làm
-const updateTaskComp=(id)=>{
+const updateTaskComp = (id) => {
     taskService
-    .getTaskByID(id)
-    .then((result)=>{
-        result.data.status = "todo";
-        updateTask(result.data);
-    })
-    .catch((error)=>{
-        console.log(error);
-    })
+        .getTaskByID(id)
+        .then((result) => {
+            result.data.status = "todo";
+            updateTask(result.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
 }
 window.updateTaskComp = updateTaskComp;
 

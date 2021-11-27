@@ -330,17 +330,15 @@ ul.todo#completed span{
 }
 
 .loader {
-  border: 8px solid #f3f3f3;
+  border: 6px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 8px solid #FA396B;
-  width: 50px;
-  height: 50px;
+  border-top: 6px solid #FA396B;
+  width: 40px;
+  height: 40px;
   margin: 20px auto;
   animation: spin 2s linear infinite;
   display: none;
 }
-
-
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
